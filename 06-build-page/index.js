@@ -9,6 +9,7 @@ const distDir = path.join(__dirname, 'project-dist');
 const bundle = fs.createWriteStream(path.join(distDir, 'style.css'));
 const stylesDir = path.join(__dirname, 'styles');
 
+
 fs.mkdir(distDir, {
   recursive: true
 }, err => {
@@ -80,7 +81,11 @@ fs.readdir(stylesDir, (err, files) => {
 
 
 
+const assetsDir = path.join(__dirname, 'assets');
+const assetsDist = path.join(__dirname,'project-dist', 'assets');
 const fsPromises = fs.promises;
+
+
 function createFolder(dir,foldername){
   fs.mkdir(path.join(dir,foldername),{ recursive: true },(err)=>{
     if(err){
@@ -88,6 +93,7 @@ function createFolder(dir,foldername){
     }
   });
 }
+
 function copyFile(src,dest){
   fsPromises.copyFile(src,dest)
     .catch(function(error){
@@ -107,7 +113,6 @@ function CopyDir(src,dest){
             copyFile(fileDir, path.join(dest,file));
           } else{
             createFolder(dest,path.basename(fileDir));
-            console.log(fileDir,path.join(dest,path.basename(fileDir)));
             CopyDir(fileDir,path.join(dest,path.basename(fileDir)));
           }
         });
@@ -119,6 +124,10 @@ function CopyDir(src,dest){
   return 'Копирование завершено';
 }
 
-const assetsDir = path.join(__dirname, 'assets');
-const assetsDist = path.join(__dirname,'project-dist', 'assets');
+
+
+
+
+
+createFolder(distDir,'assets');
 CopyDir(assetsDir,assetsDist);
