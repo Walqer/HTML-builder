@@ -6,14 +6,8 @@ const dir = path.dirname(__filename);
 const src = path.join(dir,'files');
 const dest = path.join(dir,'files-copy');
 
-function createFolder(dir,foldername){
-  fs.mkdir(path.join(dir,foldername),{ recursive: true },(err)=>{
-    if(err){
-      console.log(err);
-    }
-  });
-}
-createFolder(dir,'files-copy');
+
+
 
 function copyFile(src,dest){
   fsPromises.copyFile(src,dest)
@@ -22,7 +16,24 @@ function copyFile(src,dest){
     });
 }
 
-function CopyDir(src,dest){
+async function copyDir(src,dest){
+
+  async function createFolder(dest){
+    await fsPromises.rm(dest,{ recursive: true, force: true },(err)=>{
+      if(err){
+        console.log(err);
+      }
+    });
+    await fsPromises.mkdir(dest,{ recursive: true },(err)=>{
+      if(err){
+        console.log(err);
+      }
+    });
+    
+  }
+  await createFolder(dest);
+
+
   fs.readdir(src, (err, files) => {
     if (err) {
       console.log(err);
@@ -33,8 +44,7 @@ function CopyDir(src,dest){
           if (!stats.isDirectory()) {
             copyFile(fileDir, path.join(dest,file));
           } else{
-            createFolder(dest,path.basename(fileDir));
-            CopyDir(fileDir,path.join(dest,path.basename(fileDir)));
+            copyDir(fileDir,path.join(dest,path.basename(fileDir)));
           }
         });
       });
@@ -42,7 +52,6 @@ function CopyDir(src,dest){
     }
     
   });
-  return 'Копирование завершено';
 }
 
-console.log(CopyDir(src,dest));
+copyDir(src,dest);
