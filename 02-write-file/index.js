@@ -9,7 +9,7 @@ const rl = readline.createInterface
   );
 const dir = path.dirname(__filename);
 const output = fs.createWriteStream(path.join(dir, 'text.txt'));
-
+console.log('Введите текст');
 
 rl.on('line', (input) => {
   output.write(input + '\n');
