@@ -12,7 +12,7 @@ const output = fs.createWriteStream(path.join(dir, 'text.txt'));
 
 
 rl.on('line', (input) => {
-  output.write(input);
+  output.write(input + '\n');
   if (input == 'exit') {
     console.log('Программа завершена');
     process.exit();
